@@ -1,0 +1,50 @@
+{
+  "name": "@nexora/web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0",
+    "build": "next build --webpack",
+    "start": "next start --hostname 0.0.0.0",
+    "typecheck": "next typegen && tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "16.4.5",
+    "react": "latest",
+    "react-dom": "latest",
+    "@nexora/shared": "*",
+    "tailwindcss": "latest",
+    "@tailwindcss/postcss": "latest",
+    "lucide-react": "latest",
+    "motion": "latest",
+    "@tanstack/react-query": "latest",
+    "zustand": "latest",
+    "react-hook-form": "latest",
+    "@hookform/resolvers": "latest",
+    "recharts": "latest",
+    "@tiptap/react": "latest",
+    "@tiptap/starter-kit": "latest",
+    "@tiptap/extension-placeholder": "latest",
+    "@dnd-kit/core": "latest",
+    "@dnd-kit/utilities": "latest",
+    "next-themes": "latest",
+    "react-markdown": "latest",
+    "remark-gfm": "latest",
+    "rehype-highlight": "latest",
+    "highlight.js": "latest",
+    "@radix-ui/react-dialog": "latest",
+    "@radix-ui/react-dropdown-menu": "latest",
+    "@radix-ui/react-slot": "latest",
+    "class-variance-authority": "latest",
+    "clsx": "latest",
+    "tailwind-merge": "latest",
+    "sonner": "latest",
+    "@fontsource-variable/geist": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@types/node": "latest"
+  }
+}
