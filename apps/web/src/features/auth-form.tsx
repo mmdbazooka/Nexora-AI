@@ -12,6 +12,7 @@ import { api, json } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/common';
 import { Logo } from '@/components/logo';
+const emailDisabled = process.env.NEXT_PUBLIC_EMAIL_DISABLED === 'true';
 const copy: Record<string, { title: string; subtitle: string; cta: string }> = {
   login: {
     title: 'Welcome back.',
@@ -64,6 +65,9 @@ export function AuthForm({ action }: { action: string }) {
     resolver: zodResolver(schema as z.ZodType<Record<string, string>, Record<string, string>>),
   });
   const info = copy[action];
+  const emailActionUnavailable =
+    emailDisabled &&
+    (action === 'forgot-password' || (action === 'verify-email' && !params.get('token')));
   const submit = handleSubmit(async (data) => {
     setError('');
     try {
@@ -117,8 +121,18 @@ export function AuthForm({ action }: { action: string }) {
             Back to Nexora
           </Link>
           <h1>{info.title}</h1>
-          <span className="muted">{info.subtitle}</span>
-          {success ? (
+          {!emailActionUnavailable && <span className="muted">{info.subtitle}</span>}
+          {emailDisabled && action === 'register' && (
+            <p className="notice">
+              Keep your password safe. Email verification and password recovery are unavailable in
+              this demo.
+            </p>
+          )}
+          {emailActionUnavailable ? (
+            <p className="notice">
+              This feature requires email delivery and is unavailable in this demo.
+            </p>
+          ) : success ? (
             <div>
               <div className="notice" role="status">
                 <CheckCircle2 size={20} className="accent" style={{ marginBottom: 10 }} />
@@ -172,7 +186,7 @@ export function AuthForm({ action }: { action: string }) {
                       </button>
                     </div>
                   </Field>
-                  {action === 'login' && (
+                  {action === 'login' && !emailDisabled && (
                     <div style={{ textAlign: 'right', margin: '-7px 0 20px', fontSize: 11 }}>
                       <Link href="/forgot-password" className="accent">
                         Forgot your password?

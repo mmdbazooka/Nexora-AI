@@ -2,8 +2,9 @@ import type { Metadata, Viewport } from 'next';
 import '@fontsource-variable/geist';
 import './globals.css';
 import { Providers } from '@/components/providers';
+import { siteUrl } from '@/lib/site-url';
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'Nexora AI — A little less busy. A lot more possible.',
     template: '%s · Nexora AI',

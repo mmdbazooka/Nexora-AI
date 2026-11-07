@@ -93,4 +93,4 @@ See [the deployment guide](docs/deployment.md) and [Persian hosting notes](docs/
 - [Deployment and hosting tradeoffs](docs/deployment.md)
 - [Validation evidence and remaining blockers](docs/validation.md)
 
-There are no provider keys in the frontend. Keep `.env` files private. Production refuses to start with the development JWT secret, without a database URI, with a non-HTTPS web origin, or without a configured email transport.
+Keep provider keys and `.env` files private. Production requires a private JWT secret, a database URI, an HTTPS web origin, and a configured email transport by default. The [deployment guide](docs/deployment.md#demo-without-an-email-provider) describes the opt-in demo mode without email delivery.

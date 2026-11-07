@@ -4,8 +4,15 @@ const dispatcher = new EnvHttpProxyAgent();
 import { mkdir, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { config } from './config.js';
+import { HttpError } from './errors.js';
 export const testMailbox: { to: string; subject: string; text: string }[] = [];
+export const emailEnabled = config.MAIL_MODE === 'enabled';
+export function requireEmail() {
+  if (!emailEnabled)
+    throw new HttpError(503, 'Email delivery is unavailable in this deployment.', 'EMAIL_DISABLED');
+}
 export async function sendMail(to: string, subject: string, text: string) {
+  requireEmail();
   if (config.NODE_ENV === 'test') {
     testMailbox.push({ to, subject, text });
     return;

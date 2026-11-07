@@ -9,6 +9,7 @@ const schema = z.object({
   AI_BASE_URL: z.url().default('https://api.openai.com/v1'),
   AI_API_KEY: z.string().optional(),
   AI_MODEL: z.string().default('gpt-4o-mini'),
+  MAIL_MODE: z.enum(['enabled', 'disabled']).default('enabled'),
   SMTP_HOST: z.string().optional(),
   SMTP_PORT: z.coerce.number().default(587),
   SMTP_USER: z.string().optional(),
@@ -25,6 +26,6 @@ if (config.NODE_ENV === 'production') {
   if (!process.env.MONGODB_URI) throw new Error('MONGODB_URI is required in production');
   if (!config.WEB_URL.startsWith('https://'))
     throw new Error('WEB_URL must use HTTPS in production');
-  if (!config.SMTP_HOST && !config.RESEND_API_KEY)
+  if (config.MAIL_MODE === 'enabled' && !config.SMTP_HOST && !config.RESEND_API_KEY)
     throw new Error('Configure SMTP_HOST or RESEND_API_KEY in production for account recovery');
 }

@@ -13,6 +13,8 @@ export function ContactForm() {
   } = useForm<{ name: string; email: string; message: string }>();
   const [result, setResult] = useState('');
   const [error, setError] = useState('');
+  if (process.env.NEXT_PUBLIC_EMAIL_DISABLED === 'true')
+    return <p className="notice">The contact form is unavailable in this demo.</p>;
   return (
     <form
       className="contact-form"

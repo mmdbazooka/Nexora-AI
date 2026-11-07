@@ -7,7 +7,7 @@ import { ActionToken, Session, User, Workspace } from '../core/models.js';
 import { HttpError, validate } from '../core/errors.js';
 import { authenticate, issueCsrf } from './middleware.js';
 import { clearCookies, hash, newSession, randomToken, sendAction, setTokens } from './service.js';
-import { sendMail } from '../core/mail.js';
+import { emailEnabled, requireEmail, sendMail } from '../core/mail.js';
 import { config } from '../core/config.js';
 export const authRouter = Router();
 authRouter.get('/csrf', issueCsrf);
@@ -30,7 +30,7 @@ authRouter.post('/register', limiter, validate(registerSchema), async (req, res)
     name: `${name.split(' ')[0]}'s workspace`,
     members: [{ userId: user._id, role: 'owner' }],
   });
-  await sendAction(user, 'verify');
+  if (emailEnabled) await sendAction(user, 'verify');
   await newSession(String(user._id), req, res);
   res.status(201).json({ data: user });
 });
@@ -82,6 +82,7 @@ authRouter.post(
   limiter,
   validate(z.object({ email: z.email().toLowerCase() })),
   async (req, res) => {
+    requireEmail();
     const user = await User.findOne({ email: req.body.email });
     if (user) await sendAction(user, 'reset');
     res.json({ data: { message: 'If that email is registered, a reset link is on its way.' } });
@@ -122,6 +123,7 @@ authRouter.post(
   },
 );
 authRouter.post('/resend-verification', limiter, authenticate, async (req, res) => {
+  requireEmail();
   const user = await User.findById(req.userId);
   if (user && !user.verified) await sendAction(user, 'verify');
   res.json({ data: { message: 'Verification email sent.' } });

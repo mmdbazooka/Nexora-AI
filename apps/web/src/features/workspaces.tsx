@@ -118,17 +118,21 @@ export function Workspaces() {
                 >
                   <Pencil size={14} />
                 </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    setInvite(true);
-                    setError('');
-                  }}
-                >
-                  <Mail size={13} />
-                  Invite someone
-                </Button>
+                {process.env.NEXT_PUBLIC_EMAIL_DISABLED === 'true' ? (
+                  <p className="muted">Email invitations are unavailable in this demo.</p>
+                ) : (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => {
+                      setInvite(true);
+                      setError('');
+                    }}
+                  >
+                    <Mail size={13} />
+                    Invite someone
+                  </Button>
+                )}
               </>
             )}
           </div>

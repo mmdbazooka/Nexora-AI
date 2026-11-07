@@ -443,7 +443,10 @@ export const faqs = [
   },
   {
     q: 'Can I invite my team?',
-    a: 'Yes. Workspace owners and admins can send invitations by email. Verify your email first; invited teammates sign in, verify their own address, and accept their invitation.',
+    a:
+      process.env.NEXT_PUBLIC_EMAIL_DISABLED === 'true'
+        ? 'Email invitations are unavailable in this demo.'
+        : 'Yes. Workspace owners and admins can send invitations by email. Verify your email first; invited teammates sign in, verify their own address, and accept their invitation.',
   },
   {
     q: 'Are the pricing plans live?',

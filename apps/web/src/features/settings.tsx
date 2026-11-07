@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { Field, Loading, ErrorState } from '@/components/ui/common';
 import { Avatar } from '@/components/avatar';
+const emailDisabled = process.env.NEXT_PUBLIC_EMAIL_DISABLED === 'true';
 const links = [
   { name: 'Profile', slug: 'profile', icon: UserRound },
   { name: 'Security', slug: 'security', icon: ShieldCheck },
@@ -144,25 +145,33 @@ export function Settings({ section }: { section: string }) {
                   <input value={u.email} disabled readOnly />
                   <small className="muted">Email changes are not supported in this version.</small>
                 </Field>
-                {!u.verified && (
-                  <div className="notice">
-                    Your email is not verified yet. Check your inbox, or{' '}
-                    <button
-                      type="button"
-                      style={{ background: 'none', border: 0, padding: 0, color: 'var(--accent)' }}
-                      disabled={busy}
-                      onClick={() =>
-                        void run(async () => {
-                          await api('/auth/resend-verification', json('POST'));
-                          toast.success('Check your inbox for a new verification link.');
-                        })
-                      }
-                    >
-                      send a new verification email
-                    </button>
-                    .
-                  </div>
-                )}
+                {!u.verified &&
+                  (emailDisabled ? (
+                    <p className="notice">Email verification is unavailable in this demo.</p>
+                  ) : (
+                    <div className="notice">
+                      Your email is not verified yet. Check your inbox, or{' '}
+                      <button
+                        type="button"
+                        style={{
+                          background: 'none',
+                          border: 0,
+                          padding: 0,
+                          color: 'var(--accent)',
+                        }}
+                        disabled={busy}
+                        onClick={() =>
+                          void run(async () => {
+                            await api('/auth/resend-verification', json('POST'));
+                            toast.success('Check your inbox for a new verification link.');
+                          })
+                        }
+                      >
+                        send a new verification email
+                      </button>
+                      .
+                    </div>
+                  ))}
                 <Button disabled={busy}>{busy ? 'Saving…' : 'Save profile'}</Button>
               </form>
             </section>
@@ -217,13 +226,17 @@ export function Settings({ section }: { section: string }) {
               <div className="setting-row">
                 <div>
                   <h3>New work by email</h3>
-                  <p>Email updates when a teammate creates a project or task.</p>
+                  <p>
+                    {emailDisabled
+                      ? 'Email updates are unavailable in this demo.'
+                      : 'Email updates when a teammate creates a project or task.'}
+                  </p>
                 </div>
                 <input
                   type="checkbox"
                   aria-label="Workspace email notifications"
                   checked={u.notifications.email}
-                  disabled={busy}
+                  disabled={busy || emailDisabled}
                   onChange={(e) =>
                     void run(() =>
                       save({ notifications: { ...u.notifications, email: e.target.checked } }),
@@ -231,9 +244,11 @@ export function Settings({ section }: { section: string }) {
                   }
                 />
               </div>
-              <p className="muted" style={{ fontSize: 10, marginTop: 20 }}>
-                Account verification, password recovery, and invitation emails remain enabled.
-              </p>
+              {!emailDisabled && (
+                <p className="muted" style={{ fontSize: 10, marginTop: 20 }}>
+                  Account verification, password recovery, and invitation emails remain enabled.
+                </p>
+              )}
             </section>
           )}
           {section === 'security' && (

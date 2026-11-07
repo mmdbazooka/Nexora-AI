@@ -4,7 +4,7 @@ import { workspaceSchema } from '@nexora/shared';
 import { Activity, Invitation, Notification, User, Workspace } from '../core/models.js';
 import { HttpError, objectId, validate } from '../core/errors.js';
 import { hash, randomToken } from '../auth/service.js';
-import { sendMail } from '../core/mail.js';
+import { emailEnabled, requireEmail, sendMail } from '../core/mail.js';
 import { logger } from '../core/errors.js';
 import { config } from '../core/config.js';
 
@@ -39,7 +39,7 @@ export async function recordActivity(
       .filter((u) => u.notifications?.activity)
       .map((u) => ({ userId: u._id, message, href }));
     if (notifications.length) await Notification.insertMany(notifications);
-    if (/^Created (project|task):/.test(message))
+    if (emailEnabled && /^Created (project|task):/.test(message))
       await Promise.all(
         users
           .filter((u) => u.notifications?.email)
@@ -122,6 +122,7 @@ workspaceRouter.post(
     }),
   ),
   async (req, res) => {
+    requireEmail();
     const inviter = await User.findById(req.userId);
     if (!inviter?.verified) throw new HttpError(403, 'Verify your email before inviting teammates');
     const token = randomToken();

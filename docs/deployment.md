@@ -85,7 +85,11 @@ NEXT_PUBLIC_SITE_URL=https://your-web-deployment.vercel.app
 - Without an AI key, confirm the unavailable state and functioning non-AI features. With a key, check a real streamed conversation, history reload, selected-project context and approved task creation. Never treat contract mocks as provider validation.
 - Confirm the API's cold start behavior, logs, timeouts and provider email/AI quotas under your chosen plan.
 
-No deployment has been published from this coding environment. A Git push and a saved cloud configuration draft do not establish a public demo URL.
+### Demo without an email provider
+
+Set `MAIL_MODE=disabled` on the API and `NEXT_PUBLIC_EMAIL_DISABLED=true` on the web project. Rebuild the web project after updating its environment. Visitors can register, sign in, and use a private workspace. Email verification, password recovery by email, invitations by email, and the contact form are unavailable in this mode. Accounts keep their unverified status until they complete verification with a configured provider.
+
+Vercel supplies the production domain for metadata, robots, and the sitemap when system environment variables are enabled. Set `NEXT_PUBLIC_SITE_URL` when hosting the web application elsewhere.
 
 ## What about Sites?
 
