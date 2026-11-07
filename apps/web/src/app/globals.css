@@ -1371,6 +1371,7 @@ html:not(.dark) select {
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
   padding: 26px 14px 14px;
   transition: width 0.2s;
 }
