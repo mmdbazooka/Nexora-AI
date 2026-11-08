@@ -1322,8 +1322,11 @@ html:not(.dark) select {
   padding: 13px;
 }
 .auth-form .btn {
+  margin-top: 3px;
+}
+.auth-form .btn-primary {
   width: 100%;
-  margin-top: 6px;
+  margin-top: 6px !important;
 }
 .auth-form .form-switch {
   font-size: 12px;
